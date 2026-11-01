@@ -1,0 +1,78 @@
+{#include layout}
+{#title}Nueva factura{/title}
+{#body}
+<div class="rg-out"><section class="rg-paper">
+    <div class="rg-head">
+        <div>
+            <span class="rg-eyebrow">Registro de venta</span>
+            <h1 class="rg-h1">Nueva <em>factura</em></h1>
+        </div>
+    </div>
+
+    <form id="invoice-form" action="/facturas/crear" method="post">
+{#include partials/csrf /}
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="rg-box">
+                    <span class="rg-box-t">1 &middot; Cliente</span>
+                    <label class="rg-label" for="clientId">Seleccione el cliente</label>
+                    <select id="clientId" name="clientId" class="rg-in" required>
+                        <option value="">Seleccione un cliente</option>
+                        {#for c in clients}
+                        <option value="{c.id}" data-agent="{c.withholdingAgent}" data-name="{c.name}">{c.name} ({c.nit}){#if c.withholdingAgent} - Retenedor{/if}</option>
+                        {#else}
+                        <option value="" disabled>No hay clientes registrados</option>
+                        {/for}
+                    </select>
+                    <p class="rg-note mt-2 mb-0">Si el cliente es agente retenedor se aplica ReteIVA (15&nbsp;% del IVA). &iquest;No est&aacute; en la lista? <a class="rg-link" href="/clientes">Reg&iacute;stralo aqu&iacute;</a>.</p>
+                </div>
+
+                <div class="rg-box">
+                    <span class="rg-box-t">2 &middot; L&iacute;neas de la factura</span>
+                    <div class="rg-items-head"><span>#</span><span>Producto o servicio</span><span>Precio</span><span>Cant.</span><span style="text-align:right">Subtotal</span><span></span></div>
+                    <div id="rg-rows">
+                        {#for r in rows}
+                        <div class="rg-itemrow">
+                            <span class="n">{r}</span>
+                            <div class="name"><input type="text" name="productName" class="rg-in" maxlength="150" placeholder="Producto o servicio" aria-label="Producto {r}"></div>
+                            <div><input type="number" name="unitPrice" class="rg-in" min="0.01" step="0.01" placeholder="0,00" aria-label="Precio unitario {r}"></div>
+                            <div><input type="number" name="quantity" class="rg-in" min="1" max="100000" value="1" aria-label="Cantidad {r}"></div>
+                            <span class="sub">$ 0,00</span>
+                            <button type="button" class="rg-x" aria-label="Quitar l&iacute;nea" title="Quitar">&times;</button>
+                        </div>
+                        {/for}
+                    </div>
+                    <button type="button" id="add-row" class="btn btn-secondary rg-btn is-ghost is-sm mt-2">+ Agregar l&iacute;nea</button>
+                    <p class="rg-note mt-2 mb-0">Las filas vac&iacute;as se ignoran. M&aacute;ximo 50 l&iacute;neas.</p>
+                </div>
+
+                <p class="rg-inline-msg" id="form-msg" role="alert"></p>
+                <div class="d-flex gap-2 flex-wrap mt-2">
+                    <button type="submit" class="btn btn-primary rg-btn">Guardar factura</button>
+                    <a href="/facturas" class="btn btn-secondary rg-btn is-ghost">Cancelar</a>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="rg-bigdisplay" aria-live="polite">
+                    <small>Pantalla del cliente</small>
+                    <div class="ln"><span id="pv-client">SIN CLIENTE</span><span id="pv-agent">&mdash;</span></div>
+                    <div class="rg-pv-lines" id="pv-lines"></div>
+                    <div class="ln"><span>SUBTOTAL</span><span id="pv-sub">$ 0,00</span></div>
+                    <div class="ln"><span>IVA 19 %</span><span id="pv-iva">$ 0,00</span></div>
+                    <div class="ln"><span>RETEIVA 15 % DEL IVA</span><span id="pv-rete">- $ 0,00</span></div>
+                    <small style="margin-top:.8rem">Total a pagar</small>
+                    <div class="big" id="pv-total">$ 0,00</div>
+                </div>
+                <p class="rg-note mt-2">Vista previa estimada. El c&aacute;lculo oficial lo hace el dominio al guardar.</p>
+            </div>
+        </div>
+    </form>
+
+    <div class="rg-barcode" aria-hidden="true"></div>
+</section></div>
+{/body}
+{#scripts}
+<script src="/js/invoice-form.js"></script>
+{/scripts}
+{/include}

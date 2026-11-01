@@ -1,0 +1,69 @@
+{#include layout}
+{#title}Facturas{/title}
+{#body}
+<div class="rg-out"><section class="rg-paper">
+    <div class="rg-head">
+        <div>
+            <span class="rg-eyebrow">Libro de ventas &middot; caja 01</span>
+            <h1 class="rg-h1">Facturas <em>emitidas</em></h1>
+        </div>
+        <a href="/facturas/nueva" class="btn btn-primary rg-btn">+ Nueva factura</a>
+    </div>
+
+    <div class="rg-kpis" data-kpi>
+        <div class="rg-kpi"><small>Facturas visibles</small><strong id="k-count">0</strong></div>
+        <div class="rg-kpi"><small>Facturado (sin anuladas)</small><strong id="k-total">$ 0,00</strong></div>
+        <div class="rg-kpi"><small>Pagado</small><strong id="k-paid">$ 0,00</strong></div>
+        <div class="rg-kpi is-amber"><small>Pendiente de cobro</small><strong id="k-pending">$ 0,00</strong></div>
+    </div>
+
+    <div class="rg-toolbar">
+        <div class="rg-chips" role="group" aria-label="Filtrar por estado">
+            <a class="rg-chip {#if !selected}is-on{/if}" href="/facturas">Todas</a>
+            {#for s in statuses}
+            <a class="rg-chip {#if selected == s.name}is-on{/if}" href="/facturas?estado={s.name}">{s.label}</a>
+            {/for}
+        </div>
+        <div style="min-width:240px">
+            <input type="search" class="rg-in" data-filter="#inv-table" placeholder="Buscar n&uacute;mero o cliente..." aria-label="Buscar factura">
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="rg-table" id="inv-table">
+            <thead>
+            <tr>
+                <th>N&uacute;mero</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Estado</th>
+                <th class="num">Total</th>
+                <th class="mid">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            {#for invoice in invoices}
+            <tr data-status="{invoice.status.name}" data-total="{invoice.total}">
+                <td><a class="rg-link" href="/facturas/{invoice.id}"><b>{invoice.invoiceNumber}</b></a></td>
+                <td>{invoice.issueDate}</td>
+                <td>{invoice.client.name}</td>
+                <td><span class="stamp {#if invoice.status.name == 'PAID'}stamp-paid{#else if invoice.status.name == 'CANCELLED'}stamp-cancel{#else}stamp-issued{/if}">{invoice.status.label}</span></td>
+                <td class="num"><b>{invoice.total.money}</b></td>
+                <td class="mid">
+                    <a href="/facturas/{invoice.id}" class="btn btn-primary rg-btn is-sm">Ver</a>
+                    <a href="/facturas/{invoice.id}/pdf" class="btn btn-success rg-btn is-green is-sm">PDF</a>
+                </td>
+            </tr>
+            {#else}
+            <tr><td colspan="6" class="rg-empty">No hay facturas registradas.</td></tr>
+            {/for}
+            <tr class="rg-noresults" hidden><td colspan="6" class="rg-empty">Sin resultados para tu b&uacute;squeda.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="rg-barcode" aria-hidden="true"></div>
+    <p class="rg-thanks">Gracias por su compra</p>
+</section></div>
+{/body}
+{/include}

@@ -1,0 +1,33 @@
+# Maven y Quarkus
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+.quarkus/
+
+# Secretos locales (nunca se suben)
+.env
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+.factorypath
+bin/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Copias, registros y auditorías
+*.bak
+*.log
+auditoria.txt
+hs_err_pid*
+
+# Herramientas de VS Code
+.github/modernize/

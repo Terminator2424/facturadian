@@ -1,0 +1,107 @@
+{#include layout}
+{#title}Cierre Z{/title}
+{#body}
+<div class="rg-out"><section class="rg-paper">
+    <div class="rg-head">
+        <div>
+            <span class="rg-eyebrow">Reporte de ventas por rango de fechas</span>
+            <h1 class="rg-h1">Cierre <em>Z</em></h1>
+        </div>
+        <a href="/reportes/pdf?from={summary.from}&amp;to={summary.to}" class="btn btn-success rg-btn is-green">Descargar PDF</a>
+    </div>
+
+    <form method="get" action="/reportes" id="range-form" class="rg-toolbar">
+        <div class="d-flex gap-3 flex-wrap align-items-end">
+            <div class="rg-field mb-0">
+                <label for="from">Desde</label>
+                <input type="date" id="from" name="from" value="{summary.from}" class="rg-in">
+            </div>
+            <div class="rg-field mb-0">
+                <label for="to">Hasta</label>
+                <input type="date" id="to" name="to" value="{summary.to}" class="rg-in">
+            </div>
+            <button type="submit" class="btn btn-primary rg-btn">Consultar</button>
+        </div>
+        <div class="rg-chips" role="group" aria-label="Atajos de rango">
+            <button type="button" class="rg-chip" data-range="today">Hoy</button>
+            <button type="button" class="rg-chip" data-range="week">7 d&iacute;as</button>
+            <button type="button" class="rg-chip" data-range="month">Este mes</button>
+            <button type="button" class="rg-chip" data-range="year">Este a&ntilde;o</button>
+        </div>
+    </form>
+
+    <div class="rg-kpis">
+        <div class="rg-kpi"><small>Facturas v&aacute;lidas</small><strong data-count="{summary.validCount}" data-fmt="int">{summary.validCount}</strong></div>
+        <div class="rg-kpi"><small>Total facturado</small><strong data-count="{summary.total}" data-fmt="money">{summary.total.money}</strong></div>
+        <div class="rg-kpi"><small>Pagado</small><strong data-count="{summary.totalPaid}" data-fmt="money">{summary.totalPaid.money}</strong></div>
+        <div class="rg-kpi is-amber"><small>Pendiente</small><strong data-count="{summary.totalPending}" data-fmt="money">{summary.totalPending.money}</strong></div>
+    </div>
+
+    <div class="row g-4 mb-3">
+        <div class="col-lg-5">
+            <div class="rg-box">
+                <span class="rg-box-t">Cierre del periodo</span>
+                <div class="rg-line"><span>Subtotal</span><span class="lead"></span><b>{summary.subtotal.money}</b></div>
+                <div class="rg-line"><span>IVA</span><span class="lead"></span><b>{summary.iva.money}</b></div>
+                <div class="rg-line is-neg"><span>ReteIVA</span><span class="lead"></span><b>- {summary.reteIva.money}</b></div>
+                <div class="rg-line"><span>Pagado</span><span class="lead"></span><b>{summary.totalPaid.money}</b></div>
+                <div class="rg-line"><span>Pendiente</span><span class="lead"></span><b>{summary.totalPending.money}</b></div>
+                <div class="rg-line is-total"><span>TOTAL FACTURADO</span><span class="lead"></span><span>{summary.total.money}</span></div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="rg-box">
+                <span class="rg-box-t">Cobrado vs pendiente</span>
+                <div class="d-flex align-items-center gap-4 flex-wrap mb-3">
+                    <div class="rg-donut" data-paid="{summary.totalPaid}" data-pending="{summary.totalPending}"><span>&mdash;</span></div>
+                    <div class="rg-legend">
+                        <div><i style="background:var(--green)"></i>Pagado</div>
+                        <div><i style="background:var(--amber)"></i>Pendiente</div>
+                    </div>
+                </div>
+                {#for invoice in summary.invoices}
+                {#if invoice.status.name != 'CANCELLED'}
+                <div class="rg-bar {#if invoice.status.name == 'PAID'}is-paid{/if}" data-total="{invoice.total}">
+                    <span>{invoice.invoiceNumber}</span>
+                    <span class="t"><i></i></span>
+                    <span class="v">{invoice.total.money}</span>
+                </div>
+                {/if}
+                {/for}
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="rg-table">
+            <thead>
+            <tr>
+                <th>N&uacute;mero</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Estado</th>
+                <th class="num">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {#for invoice in summary.invoices}
+            <tr>
+                <td><a class="rg-link" href="/facturas/{invoice.id}"><b>{invoice.invoiceNumber}</b></a></td>
+                <td>{invoice.issueDate}</td>
+                <td>{invoice.client.name}</td>
+                <td><span class="stamp {#if invoice.status.name == 'PAID'}stamp-paid{#else if invoice.status.name == 'CANCELLED'}stamp-cancel{#else}stamp-issued{/if}">{invoice.status.label}</span></td>
+                <td class="num"><b>{invoice.total.money}</b></td>
+            </tr>
+            {#else}
+            <tr><td colspan="5" class="rg-empty">No hay facturas en este periodo.</td></tr>
+            {/for}
+            </tbody>
+        </table>
+    </div>
+    <p class="rg-note">Las facturas anuladas se listan pero no suman en los totales.</p>
+
+    <div class="rg-barcode" aria-hidden="true"></div>
+    <p class="rg-thanks">Cierre generado por FacturaDIAN</p>
+</section></div>
+{/body}
+{/include}

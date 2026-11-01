@@ -1,0 +1,111 @@
+{#include layout}
+{#title}Factura {invoice.invoiceNumber}{/title}
+{#body}
+<div class="rg-out"><section class="rg-paper">
+    <div class="rg-head">
+        <div>
+            <span class="rg-eyebrow">Comprobante de venta</span>
+            <h1 class="rg-h1">Factura <em>{invoice.invoiceNumber}</em></h1>
+        </div>
+        <div class="d-flex gap-2 flex-wrap" data-noprint>
+            <a href="/facturas/{invoice.id}/pdf" class="btn btn-success rg-btn is-green">Descargar PDF</a>
+            <button type="button" class="btn btn-secondary rg-btn is-ghost" data-print>Imprimir</button>
+            <a href="/facturas" class="btn btn-secondary rg-btn is-ghost">Volver</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <article class="rg-receipt">
+                {#if invoice.status.name == 'PAID'}
+                <div class="rg-bigstamp is-green">PAGADA</div>
+                {#else if invoice.status.name == 'CANCELLED'}
+                <div class="rg-bigstamp is-red">ANULADA</div>
+                {/if}
+
+                <div class="rg-brand">Factura<em>DIAN</em></div>
+                <div class="rg-sub">Factura electr&oacute;nica de venta &middot; Tunja</div>
+                <hr class="rg-rule">
+
+                <div class="rg-line"><span>N&deg; factura</span><span class="lead"></span><b>{invoice.invoiceNumber}</b></div>
+                <div class="rg-line"><span>Fecha de emisi&oacute;n</span><span class="lead"></span><b>{invoice.issueDate}</b></div>
+                <div class="rg-line"><span>Cajero</span><span class="lead"></span><b>{invoice.issuedByName}</b></div>
+                <div class="rg-line"><span>Estado</span><span class="lead"></span>
+                    <span class="stamp {#if invoice.status.name == 'PAID'}stamp-paid{#else if invoice.status.name == 'CANCELLED'}stamp-cancel{#else}stamp-issued{/if}">{invoice.status.label}</span>
+                </div>
+                <hr class="rg-rule">
+
+                <div class="rg-line"><span>Cliente</span><span class="lead"></span><b>{invoice.client.name}</b></div>
+                <div class="rg-line"><span>NIT</span><span class="lead"></span><b>{invoice.client.nit}</b></div>
+                <div class="rg-line"><span>Correo</span><span class="lead"></span><b>{invoice.client.email ?: '-'}</b></div>
+                <div class="rg-line"><span>Agente retenedor</span><span class="lead"></span><b>{#if invoice.client.withholdingAgent}S&iacute;{#else}No{/if}</b></div>
+                <hr class="rg-rule">
+
+                {#for item in invoice.items}
+                <div class="rg-item">
+                    <div class="rg-line"><span>{item.productName}</span><span class="lead"></span><b>{item.subtotal.money}</b></div>
+                    <small>{item.quantity} x {item.unitPrice.money}</small>
+                </div>
+                {#else}
+                <p class="rg-note">Sin &iacute;tems.</p>
+                {/for}
+                <hr class="rg-rule">
+
+                <div class="rg-line"><span>Subtotal</span><span class="lead"></span><b>{invoice.subtotal.money}</b></div>
+                <div class="rg-line"><span>IVA (19 %)</span><span class="lead"></span><b>{invoice.iva.money}</b></div>
+                <div class="rg-line is-neg"><span>ReteIVA (15 % del IVA)</span><span class="lead"></span><b>- {invoice.reteIva.money}</b></div>
+                <div class="rg-line is-total"><span>TOTAL A PAGAR</span><span class="lead"></span><span>{invoice.total.money}</span></div>
+
+                <div class="rg-barcode" aria-hidden="true"></div>
+                <p class="rg-thanks">Gracias por su compra</p>
+            </article>
+        </div>
+
+        <div class="col-lg-5 rg-actions">
+            {#if editable}
+            <div class="rg-box">
+                <span class="rg-box-t">Agregar l&iacute;nea</span>
+                <form action="/facturas/{invoice.id}/items" method="post">
+{#include partials/csrf /}
+                    <div class="rg-field">
+                        <label for="productName">Producto</label>
+                        <input type="text" id="productName" name="productName" class="rg-in" maxlength="150" required placeholder="Nombre del producto">
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-7 rg-field">
+                            <label for="unitPrice">Precio unitario</label>
+                            <input type="number" id="unitPrice" name="unitPrice" class="rg-in" min="0.01" step="0.01" required placeholder="0,00">
+                        </div>
+                        <div class="col-5 rg-field">
+                            <label for="quantity">Cantidad</label>
+                            <input type="number" id="quantity" name="quantity" class="rg-in" min="1" max="100000" value="1" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary rg-btn is-block">Agregar a la factura</button>
+                </form>
+            </div>
+
+            <div class="rg-box">
+                <span class="rg-box-t">Cambiar estado</span>
+                <div class="d-grid gap-2">
+                    <form action="/facturas/{invoice.id}/pagar" method="post" class="d-grid">
+{#include partials/csrf /}
+                        <button type="submit" class="btn btn-success rg-btn is-green">Marcar como pagada</button>
+                    </form>
+                    <form action="/facturas/{invoice.id}/anular" method="post" class="d-grid" data-confirm="&iquest;Seguro que deseas anular esta factura?">
+{#include partials/csrf /}
+                        <button type="submit" class="btn btn-danger rg-btn is-red">Anular factura</button>
+                    </form>
+                </div>
+                <p class="rg-note mt-3 mb-0">Una factura pagada ya no se puede anular ni modificar.</p>
+            </div>
+            {#else}
+            <div class="rg-note-box mt-3">
+                Esta factura est&aacute; en estado <b>{invoice.status.label}</b> y ya no admite cambios.
+            </div>
+            {/if}
+        </div>
+    </div>
+</section></div>
+{/body}
+{/include}

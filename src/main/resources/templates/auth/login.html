@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Iniciar sesi&oacute;n &middot; FacturaDIAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/receipt.css">
+</head>
+<body class="rc-body">
+<div class="rc-bg" aria-hidden="true">Factura.</div>
+<main class="rc-machine" id="rc-machine" data-greeting="BIENVENIDO" data-state="{#if error}error{#else if registered}ok{#else}idle{/if}">
+    <div class="rc-tag left" aria-hidden="true"><b>19%</b><small>IVA</small></div>
+    <div class="rc-tag right" aria-hidden="true"><b>15%</b><small>ReteIVA</small></div>
+
+    <div class="rc-reg">
+        <div class="rc-reg-top">
+            <span class="rc-plate">CAJA &middot; 01</span>
+            <span class="rc-leds" aria-hidden="true"><i class="g"></i><i class="a"></i><i class="r"></i></span>
+        </div>
+        <div class="rc-lcd" role="status" aria-live="polite">
+            <span class="rc-lcd-1 rc-caret" id="rc-l1">&gt; BIENVENIDO</span>
+            <span class="rc-lcd-2" id="rc-l2">--:--:--</span>
+        </div>
+        <div class="rc-pad" aria-hidden="true">
+            <span class="rc-k" data-k="1">1</span><span class="rc-k" data-k="2">2</span><span class="rc-k" data-k="3">3</span>
+            <span class="rc-k" data-k="4">4</span><span class="rc-k" data-k="5">5</span><span class="rc-k" data-k="6">6</span>
+            <span class="rc-k" data-k="7">7</span><span class="rc-k" data-k="8">8</span><span class="rc-k" data-k="9">9</span>
+            <span class="rc-k" data-k="0">0</span><span class="rc-k" data-k="00">00</span><span class="rc-k c" data-k="C">C</span>
+        </div>
+        <div class="rc-slot" aria-hidden="true"></div>
+    </div>
+
+    <div class="rc-out">
+        <div class="rc-ticket">
+            {#if error}
+            <div class="rc-stamp">RECHAZADO</div>
+            {/if}
+            {#if registered}
+            <div class="rc-stamp ok">CUENTA CREADA</div>
+            {/if}
+
+            <div class="rc-head">
+                <div class="rc-brand">Factura<em>DIAN</em></div>
+                <p class="rc-sub">Facturaci&oacute;n de venta &middot; Tunja</p>
+            </div>
+            <div class="rc-rule"></div>
+            <div class="rc-meta"><span id="rc-date">--/--/---- --:--</span><span id="rc-no">No. 000000</span></div>
+            <div class="rc-rule"></div>
+
+            <form method="post" action="/j_security_check" class="rc-form">
+                {#if error}
+                <p class="rc-msg err" role="alert">Usuario o contrase&ntilde;a incorrectos, o cuenta bloqueada temporalmente.</p>
+                {/if}
+                {#if registered}
+                <p class="rc-msg" role="status">Cuenta creada con &eacute;xito. Ya puedes ingresar.</p>
+                {/if}
+                <div class="rc-field">
+                    <label for="username">CAJERO</label>
+                    <input type="text" id="username" name="j_username" maxlength="20" autocomplete="username"
+                           autofocus required placeholder="tu_usuario" data-lcd="CAJERO">
+                </div>
+                <div class="rc-field">
+                    <label for="password">CLAVE</label>
+                    <input type="password" class="rc-pw" id="password" name="j_password" maxlength="128"
+                           autocomplete="current-password" required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+                           data-lcd="CLAVE" data-lcd-mask>
+                    <button type="button" class="pw-toggle" data-toggle-password="password">Mostrar</button>
+                </div>
+
+                <div class="rc-rule"></div>
+                <div class="rc-row"><span>1 x Ingreso al sistema</span><span class="rc-lead"></span><span>$0</span></div>
+                <div class="rc-row"><span>IVA 19 %</span><span class="rc-lead"></span><span>$0</span></div>
+                <div class="rc-row total"><span>TOTAL A PAGAR</span><span class="rc-lead"></span><span>$0</span></div>
+                <button type="submit" class="rc-btn">Confirmar entrada &rarr;</button>
+            </form>
+
+            <div class="rc-bars" aria-hidden="true"></div>
+            <p class="rc-alt">&iquest;Sin cuenta? <a href="/registro">Abrir una</a></p>
+            <p class="rc-thanks">Gracias por su compra &middot; U. Santo Tom&aacute;s</p>
+        </div>
+    </div>
+</main>
+
+<div class="rc-tape" aria-hidden="true">
+    <div class="rc-tape-track">
+        <span>&#9679; FACTURA ELECTR&Oacute;NICA DE VENTA &#9679; IVA 19% &#9679; RETEIVA 15% &#9679; CIERRE Z &#9679; GRACIAS POR SU COMPRA</span>
+        <span>&#9679; FACTURA ELECTR&Oacute;NICA DE VENTA &#9679; IVA 19% &#9679; RETEIVA 15% &#9679; CIERRE Z &#9679; GRACIAS POR SU COMPRA</span>
+        <span>&#9679; FACTURA ELECTR&Oacute;NICA DE VENTA &#9679; IVA 19% &#9679; RETEIVA 15% &#9679; CIERRE Z &#9679; GRACIAS POR SU COMPRA</span>
+        <span>&#9679; FACTURA ELECTR&Oacute;NICA DE VENTA &#9679; IVA 19% &#9679; RETEIVA 15% &#9679; CIERRE Z &#9679; GRACIAS POR SU COMPRA</span>
+    </div>
+</div>
+<script src="/js/receipt.js"></script>
+</body>
+</html>

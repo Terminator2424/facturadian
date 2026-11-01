@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crear cuenta &middot; FacturaDIAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/receipt.css">
+</head>
+<body class="rc-body">
+<div class="rc-bg" aria-hidden="true">Factura.</div>
+<main class="rc-machine" id="rc-machine" data-greeting="ALTA DE CAJERO" data-state="{#if error}error{#else}idle{/if}">
+    <div class="rc-tag left" aria-hidden="true"><b>10+</b><small>Caracteres</small></div>
+    <div class="rc-tag right" aria-hidden="true"><b>BCrypt</b><small>Cifrado</small></div>
+
+    <div class="rc-reg">
+        <div class="rc-reg-top">
+            <span class="rc-plate">CAJA &middot; 01</span>
+            <span class="rc-leds" aria-hidden="true"><i class="g"></i><i class="a"></i><i class="r"></i></span>
+        </div>
+        <div class="rc-lcd" role="status" aria-live="polite">
+            <span class="rc-lcd-1 rc-caret" id="rc-l1">&gt; ALTA DE CAJERO</span>
+            <span class="rc-lcd-2" id="rc-l2">--:--:--</span>
+        </div>
+        <div class="rc-pad" aria-hidden="true">
+            <span class="rc-k" data-k="1">1</span><span class="rc-k" data-k="2">2</span><span class="rc-k" data-k="3">3</span>
+            <span class="rc-k" data-k="4">4</span><span class="rc-k" data-k="5">5</span><span class="rc-k" data-k="6">6</span>
+            <span class="rc-k" data-k="7">7</span><span class="rc-k" data-k="8">8</span><span class="rc-k" data-k="9">9</span>
+            <span class="rc-k" data-k="0">0</span><span class="rc-k" data-k="00">00</span><span class="rc-k c" data-k="C">C</span>
+        </div>
+        <div class="rc-slot" aria-hidden="true"></div>
+    </div>
+
+    <div class="rc-out">
+        <div class="rc-ticket">
+            {#if error}
+            <div class="rc-stamp">RECHAZADO</div>
+            {/if}
+
+            <div class="rc-head">
+                <div class="rc-brand">Factura<em>DIAN</em></div>
+                <p class="rc-sub">Alta de cajero &middot; Tunja</p>
+            </div>
+            <div class="rc-rule"></div>
+            <div class="rc-meta"><span id="rc-date">--/--/---- --:--</span><span id="rc-no">No. 000000</span></div>
+            <div class="rc-rule"></div>
+
+            <form method="post" action="/registro" class="rc-form">
+{#include partials/csrf /}
+                {#if error}
+                <p class="rc-msg err" role="alert">{error}</p>
+                {/if}
+                <div class="rc-field">
+                    <label for="fullName">NOMBRE COMPLETO</label>
+                    <input type="text" id="fullName" name="fullName" maxlength="120" value="{fullName ?: ''}"
+                           autocomplete="name" required placeholder="Nombre y apellido" data-lcd="NOMBRE">
+                </div>
+                <div class="rc-field">
+                    <label for="email">CORREO</label>
+                    <input type="email" id="email" name="email" maxlength="120" value="{email ?: ''}"
+                           autocomplete="email" required placeholder="correo@ejemplo.com" data-lcd="CORREO">
+                </div>
+                <div class="rc-field">
+                    <label for="username">USUARIO</label>
+                    <input type="text" id="username" name="username" maxlength="20" minlength="4" pattern="[A-Za-z0-9_]+"
+                           value="{username ?: ''}" autocomplete="username" required placeholder="tu_usuario" data-lcd="CAJERO">
+                    <p class="rc-hint">4 a 20 caracteres: letras, n&uacute;meros o guion bajo.</p>
+                </div>
+                <div class="rc-field">
+                    <label for="password">CLAVE</label>
+                    <input type="password" class="rc-pw" id="password" name="password" minlength="10" maxlength="72"
+                           autocomplete="new-password" required placeholder="M&iacute;nimo 10 caracteres" data-lcd="CLAVE" data-lcd-mask>
+                    <button type="button" class="pw-toggle" data-toggle-password="password">Mostrar</button>
+                    <div class="rc-meter"><i id="strength-bar"></i></div>
+                    <p class="rc-hint"><b id="strength-text"></b> May&uacute;scula, min&uacute;scula, n&uacute;mero y s&iacute;mbolo.</p>
+                </div>
+                <div class="rc-field">
+                    <label for="confirm">REPETIR CLAVE</label>
+                    <input type="password" class="rc-pw" id="confirm" name="confirm" minlength="10" maxlength="72"
+                           autocomplete="new-password" required placeholder="Repite la clave" data-lcd="REPITA" data-lcd-mask>
+                    <button type="button" class="pw-toggle" data-toggle-password="confirm">Mostrar</button>
+                    <p class="rc-fieldmsg" id="confirm-msg"></p>
+                </div>
+
+                <div class="rc-rule"></div>
+                <div class="rc-row"><span>1 x Apertura de cuenta</span><span class="rc-lead"></span><span>$0</span></div>
+                <div class="rc-row total"><span>TOTAL A PAGAR</span><span class="rc-lead"></span><span>$0</span></div>
+                <button type="submit" class="rc-btn">Abrir cuenta &rarr;</button>
+            </form>
+
+            <div class="rc-bars" aria-hidden="true"></div>
+            <p class="rc-alt">&iquest;Ya tienes cuenta? <a href="/login">Iniciar sesi&oacute;n</a></p>
+            <p class="rc-thanks">Gracias por su compra &middot; U. Santo Tom&aacute;s</p>
+        </div>
+    </div>
+</main>
+
+<div class="rc-tape" aria-hidden="true">
+    <div class="rc-tape-track">
+        <span>&#9679; ALTA DE CAJERO &#9679; CLAVES CIFRADAS CON BCRYPT &#9679; BLOQUEO TRAS 5 INTENTOS &#9679; SESI&Oacute;N CON CADUCIDAD &#9679; GRACIAS POR SU COMPRA</span>
+        <span>&#9679; ALTA DE CAJERO &#9679; CLAVES CIFRADAS CON BCRYPT &#9679; BLOQUEO TRAS 5 INTENTOS &#9679; SESI&Oacute;N CON CADUCIDAD &#9679; GRACIAS POR SU COMPRA</span>
+        <span>&#9679; ALTA DE CAJERO &#9679; CLAVES CIFRADAS CON BCRYPT &#9679; BLOQUEO TRAS 5 INTENTOS &#9679; SESI&Oacute;N CON CADUCIDAD &#9679; GRACIAS POR SU COMPRA</span>
+        <span>&#9679; ALTA DE CAJERO &#9679; CLAVES CIFRADAS CON BCRYPT &#9679; BLOQUEO TRAS 5 INTENTOS &#9679; SESI&Oacute;N CON CADUCIDAD &#9679; GRACIAS POR SU COMPRA</span>
+    </div>
+</div>
+<script src="/js/receipt.js"></script>
+</body>
+</html>

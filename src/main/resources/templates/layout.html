@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{#insert title}FacturaDIAN{/insert} | FacturaDIAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="rg-body">
+
+<div class="rg-toasts" aria-live="polite">
+    {#if success}
+    <div class="alert alert-success rg-alert" role="alert">
+        {success}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+    {/if}
+    {#if error}
+    <div class="alert alert-danger rg-alert" role="alert">
+        {error}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+    {/if}
+</div>
+
+<header class="rg-top">
+    <div class="container rg-top-in">
+        <a class="rg-logo" href="/facturas">Factura<em>DIAN</em></a>
+        <div class="rg-lcd" role="status">
+            <span class="rg-lcd-l1 rg-caret" id="rg-screen">&gt; FACTURADIAN</span>
+            <span class="rg-lcd-l2"><span>CAJERO: {inject:me.shortName}</span><span id="rg-clock">--:--:--</span></span>
+        </div>
+        <nav class="rg-keys" aria-label="Men&uacute; principal">
+            <a class="rg-key" data-match="/facturas" href="/facturas">Facturas</a>
+            <a class="rg-key" data-match="/facturas/nueva" href="/facturas/nueva">+ Nueva</a>
+            <a class="rg-key" data-match="/clientes" href="/clientes">Clientes</a>
+            <a class="rg-key" data-match="/reportes" href="/reportes">Reportes</a>
+            <a class="rg-key is-dark" href="/q/swagger-ui" target="_blank" rel="noopener">Swagger</a>
+            <form method="post" action="/salir" class="d-inline">
+{#include partials/csrf /}<button type="submit" class="rg-key is-dark">Salir</button></form>
+        </nav>
+    </div>
+</header>
+
+<main class="container rg-main">
+    <div class="rg-slot" aria-hidden="true"></div>
+    {#insert body}{/insert}
+</main>
+
+<footer class="rg-foot">
+    <div class="container">
+        <em>FacturaDIAN</em> &middot; Universidad Santo Tom&aacute;s, Tunja &middot; Desarrollo Orientado a Servicios 2026-2
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/app.js"></script>
+{#insert scripts}{/insert}
+</body>
+</html>

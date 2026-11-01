@@ -1,0 +1,75 @@
+{#include layout}
+{#title}Clientes{/title}
+{#body}
+<div class="rg-out"><section class="rg-paper">
+    <div class="rg-head">
+        <div>
+            <span class="rg-eyebrow">Directorio &middot; NIT &uacute;nico</span>
+            <h1 class="rg-h1">Nuestros <em>clientes</em></h1>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <form action="/clientes/crear" method="post" class="rg-box">
+{#include partials/csrf /}
+                <span class="rg-box-t">Alta de cliente</span>
+                <div class="rg-field">
+                    <label for="nit">NIT</label>
+                    <input type="text" id="nit" name="nit" class="rg-in" required minlength="5" maxlength="20" placeholder="900123456-1">
+                </div>
+                <div class="rg-field">
+                    <label for="name">Nombre o raz&oacute;n social</label>
+                    <input type="text" id="name" name="name" class="rg-in" required maxlength="120" placeholder="Empresa S.A.S.">
+                </div>
+                <div class="rg-field">
+                    <label for="email">Correo</label>
+                    <input type="email" id="email" name="email" class="rg-in" maxlength="120" placeholder="contacto@empresa.co">
+                </div>
+                <label class="rg-check">
+                    <input type="checkbox" id="withholdingAgent" name="withholdingAgent" value="true">
+                    <i></i><span>Es agente retenedor de IVA</span>
+                </label>
+                <button type="submit" class="btn btn-primary rg-btn is-block">Guardar cliente</button>
+            </form>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="rg-toolbar">
+                <span class="rg-label">Listado</span>
+                <div style="min-width:240px">
+                    <input type="search" class="rg-in" data-filter="#client-table" placeholder="Buscar por NIT o nombre..." aria-label="Buscar cliente">
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="rg-table" id="client-table">
+                    <thead>
+                    <tr>
+                        <th>NIT</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th class="mid">Retenedor</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {#for client in clients}
+                    <tr data-row>
+                        <td><b>{client.nit}</b></td>
+                        <td>{client.name}</td>
+                        <td>{client.email ?: '-'}</td>
+                        <td class="mid">{#if client.withholdingAgent}<span class="stamp stamp-info">Retenedor</span>{#else}<span class="stamp stamp-muted">No</span>{/if}</td>
+                    </tr>
+                    {#else}
+                    <tr><td colspan="4" class="rg-empty">No hay clientes registrados.</td></tr>
+                    {/for}
+                    <tr class="rg-noresults" hidden><td colspan="4" class="rg-empty">Sin resultados para tu b&uacute;squeda.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="rg-barcode" aria-hidden="true"></div>
+</section></div>
+{/body}
+{/include}

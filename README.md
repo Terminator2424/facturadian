@@ -3,11 +3,9 @@
 Facturación electrónica de venta con las reglas de la DIAN (IVA 19 % y ReteIVA 15 %).
 Proyecto integrador de Desarrollo Orientado a Servicios 2026-2, Universidad Santo Tomás, Seccional Tunja.
 
-## Integrantes
+## Integrante
 
 - Edison Javier Gonzalez Velosa
-- Integrante 2
-- Integrante 3
 
 ## Propuesta
 

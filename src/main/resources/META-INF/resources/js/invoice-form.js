@@ -78,6 +78,30 @@
     row.querySelector('[name=productName]').focus();
   });
 
+  /* NUEVO: Buscador de clientes por NIT / CC o nombre */
+  var q = document.getElementById('client-q');
+  if (q) {
+    // Guardamos todas las opciones (ignorando la primera que dice "Seleccione un cliente")
+    var all = Array.prototype.slice.call(sel.options, 1).map(function (o) {
+      return { o: o, t: o.textContent.toLowerCase() };
+    });
+    
+    q.addEventListener('input', function () {
+      var v = q.value.trim().toLowerCase(), shown = [];
+      all.forEach(function (x) {
+        var m = !v || x.t.indexOf(v) > -1;
+        x.o.hidden = !m;
+        x.o.disabled = !m;
+        if (m) { shown.push(x.o); }
+      });
+      // Si solo queda 1 resultado, lo seleccionamos automáticamente y recalculamos
+      if (v && shown.length === 1) {
+        sel.value = shown[0].value;
+        calc();
+      }
+    });
+  }
+
   form.addEventListener('submit', function (e) {
     var ok = false;
     box.querySelectorAll('.rg-itemrow').forEach(function (row) {

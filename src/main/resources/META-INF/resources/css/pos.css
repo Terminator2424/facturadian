@@ -1,0 +1,8 @@
+.pos-search { position: relative; }
+.pos-list { position: absolute; left: 0; right: 0; top: 100%; z-index: 30; margin: 2px 0 0; padding: 0; list-style: none; background: #fff; border: 2px solid #14110f; max-height: 300px; overflow-y: auto; box-shadow: 4px 4px 0 rgba(20, 17, 15, .25); }
+.pos-list[hidden] { display: none; }
+.pos-list li { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem .75rem; cursor: pointer; border-bottom: 1px dashed #cfc8b8; font-family: 'IBM Plex Mono', monospace; font-size: .85rem; }
+.pos-list li small { opacity: .75; white-space: nowrap; }
+.pos-list li.is-active, .pos-list li:hover { background: #14110f; color: #fff; }
+.pos-list li.pos-empty { cursor: default; background: #fff; color: #14110f; justify-content: center; }
+.pos-price { text-align: right; font-size: .85rem; }

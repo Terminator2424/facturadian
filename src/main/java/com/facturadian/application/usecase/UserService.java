@@ -2,6 +2,7 @@ package com.facturadian.application.usecase;
 
 import com.facturadian.domain.exception.BusinessException;
 import com.facturadian.domain.model.AppUser;
+import com.facturadian.domain.model.Role;
 import com.facturadian.application.port.in.UserUseCase;
 import com.facturadian.application.port.out.PasswordHasherPort;
 import com.facturadian.application.port.out.UserRepositoryPort;
@@ -27,6 +28,19 @@ public class UserService implements UserUseCase {
 
     @Override
     public AppUser register(String username, String fullName, String email, String password, String confirmPassword) {
+        return create(username, fullName, email, password, confirmPassword, Role.CASHIER);
+    }
+
+    @Override
+    public AppUser createAdmin(String username, String fullName, String email, String password) {
+        if (repository.existsAdmin()) {
+            throw new BusinessException("Ya existe un administrador.");
+        }
+        return create(username, fullName, email, password, password, Role.ADMIN);
+    }
+
+    private AppUser create(String username, String fullName, String email, String password,
+                           String confirmPassword, Role role) {
         String user = username == null ? "" : username.trim().toLowerCase();
         String name = fullName == null ? "" : fullName.trim();
         String mail = email == null ? "" : email.trim().toLowerCase();
@@ -54,6 +68,7 @@ public class UserService implements UserUseCase {
         appUser.setFullName(name);
         appUser.setEmail(mail);
         appUser.setPasswordHash(hasher.hash(password));
+        appUser.setRole(role);
         return repository.save(appUser);
     }
 

@@ -7,7 +7,7 @@
             <span class="rg-eyebrow">Libro de ventas &middot; caja 01</span>
             <h1 class="rg-h1">Facturas <em>emitidas</em></h1>
         </div>
-        <a href="/facturas/nueva" class="btn btn-primary rg-btn">+ Nueva factura</a>
+        {#if inject:me.cashier}<a href="/facturas/nueva" class="btn btn-primary rg-btn">+ Nueva factura</a>{/if}
     </div>
 
     <div class="rg-kpis" data-kpi>

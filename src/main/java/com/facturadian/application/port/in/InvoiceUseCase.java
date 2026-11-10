@@ -1,15 +1,18 @@
 package com.facturadian.application.port.in;
 
 import com.facturadian.domain.model.Invoice;
-import com.facturadian.domain.model.InvoiceItem;
 import com.facturadian.domain.model.InvoiceStatus;
 import com.facturadian.domain.model.SalesSummary;
 import java.time.LocalDate;
 import java.util.List;
 
 public interface InvoiceUseCase {
-    Invoice createInvoice(Long clientId, List<InvoiceItem> items, String issuedByUsername);
-    Invoice addItem(Long invoiceId, InvoiceItem item);
+
+    /** Línea de venta: el producto sale del catálogo (con su precio), solo se elige la cantidad. */
+    record ItemRequest(Long productId, int quantity) {}
+
+    Invoice createInvoice(Long clientId, List<ItemRequest> items, String issuedByUsername);
+    Invoice addItem(Long invoiceId, ItemRequest item);
     Invoice markAsPaid(Long invoiceId);
     Invoice cancelInvoice(Long invoiceId);
     Invoice getInvoice(Long invoiceId);

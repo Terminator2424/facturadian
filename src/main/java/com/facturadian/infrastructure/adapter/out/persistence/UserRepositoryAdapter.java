@@ -1,6 +1,7 @@
 package com.facturadian.infrastructure.adapter.out.persistence;
 
 import com.facturadian.domain.model.AppUser;
+import com.facturadian.domain.model.Role;
 import com.facturadian.application.port.out.UserRepositoryPort;
 import com.facturadian.infrastructure.adapter.out.persistence.entity.UserEntity;
 import com.facturadian.infrastructure.adapter.out.persistence.mapper.UserMapper;
@@ -36,5 +37,10 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     @Override
     public Optional<AppUser> findByEmail(String email) {
         return repository.find("email", email).firstResultOptional().map(UserMapper::toDomain);
+    }
+
+    @Override
+    public boolean existsAdmin() {
+        return repository.count("role", Role.ADMIN.name()) > 0;
     }
 }

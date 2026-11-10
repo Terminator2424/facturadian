@@ -37,7 +37,7 @@ public class UserIdentityProvider implements IdentityProvider<UsernamePasswordAu
             }
             return QuarkusSecurityIdentity.builder()
                     .setPrincipal(new QuarkusPrincipal(user.get().getUsername()))
-                    .addRole("user")
+                    .addRole(user.get().getRole().getKey())
                     .addAttribute("fullName", user.get().getFullName())
                     .build();
         });

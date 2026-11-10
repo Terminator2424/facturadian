@@ -7,4 +7,5 @@ public interface UserRepositoryPort {
     AppUser save(AppUser user);
     Optional<AppUser> findByUsername(String username);
     Optional<AppUser> findByEmail(String email);
+    boolean existsAdmin();
 }

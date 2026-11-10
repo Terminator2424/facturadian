@@ -15,6 +15,7 @@ public class AppUser {
     private int failedAttempts;
     private LocalDateTime lockedUntil;
     private LocalDateTime createdAt = LocalDateTime.now();
+    private Role role = Role.CASHIER;
 
     public boolean isLocked() {
         return lockedUntil != null && lockedUntil.isAfter(LocalDateTime.now());
@@ -52,4 +53,6 @@ public class AppUser {
     public void setLockedUntil(LocalDateTime lockedUntil) { this.lockedUntil = lockedUntil; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 }

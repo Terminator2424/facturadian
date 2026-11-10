@@ -4,6 +4,7 @@ import com.facturadian.domain.model.Client;
 import com.facturadian.domain.model.Invoice;
 import com.facturadian.domain.model.InvoiceItem;
 import com.facturadian.domain.model.InvoiceStatus;
+import com.facturadian.domain.model.Product;
 import com.facturadian.domain.model.SalesSummary;
 import io.quarkus.qute.TemplateData;
 
@@ -11,6 +12,7 @@ import io.quarkus.qute.TemplateData;
 @TemplateData(target = Invoice.class)
 @TemplateData(target = InvoiceItem.class)
 @TemplateData(target = Client.class)
+@TemplateData(target = Product.class)
 @TemplateData(target = InvoiceStatus.class)
 @TemplateData(target = SalesSummary.class)
 public class TemplateDataConfig {

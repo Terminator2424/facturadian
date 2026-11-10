@@ -1,0 +1,91 @@
+{#include layout}
+{#title}Productos{/title}
+{#body}
+<div class="rg-out"><section class="rg-paper">
+    <div class="rg-head">
+        <div>
+            <span class="rg-eyebrow">Cat&aacute;logo &middot; c&oacute;digo &uacute;nico</span>
+            <h1 class="rg-h1">Nuestros <em>productos</em></h1>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {#if inject:me.admin}
+        <div class="col-lg-4">
+            <form action="/productos/crear" method="post" class="rg-box">
+{#include partials/csrf /}
+                <span class="rg-box-t">Alta de producto</span>
+                <div class="rg-field">
+                    <label for="code">C&oacute;digo de barras o SKU</label>
+                    <input type="text" id="code" name="code" class="rg-in" required minlength="3" maxlength="30" placeholder="7701000000001">
+                </div>
+                <div class="rg-field">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" name="name" class="rg-in" required maxlength="150" placeholder="Libro de contabilidad">
+                </div>
+                <div class="rg-field">
+                    <label for="unitPrice">Precio unitario</label>
+                    <input type="number" id="unitPrice" name="unitPrice" class="rg-in" required min="0.01" step="0.01" placeholder="0,00">
+                </div>
+                <button type="submit" class="btn btn-primary rg-btn is-block">Guardar producto</button>
+            </form>
+        </div>
+        {/if}
+
+        <div class="{#if inject:me.admin}col-lg-8{#else}col-12{/if}">
+            <div class="rg-toolbar">
+                <span class="rg-label">Listado</span>
+                <div style="min-width:240px">
+                    <input type="search" class="rg-in" data-filter="#product-table" placeholder="Buscar por c&oacute;digo o nombre..." aria-label="Buscar producto">
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="rg-table" id="product-table">
+                    <thead>
+                    <tr>
+                        <th>C&oacute;digo</th>
+                        <th>Producto</th>
+                        <th class="num">Precio</th>
+                        <th class="mid">Estado</th>
+                        {#if inject:me.admin}<th class="mid">Acciones</th>{/if}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {#for p in products}
+                    <tr data-row>
+                        <td><b>{p.code}</b></td>
+                        {#if inject:me.admin}
+                        <td><span hidden>{p.name}</span><input form="edit-{p.id}" type="text" name="name" value="{p.name}" class="rg-in" required maxlength="150" aria-label="Nombre de {p.code}"></td>
+                        <td class="num"><input form="edit-{p.id}" type="number" name="unitPrice" value="{p.unitPrice}" class="rg-in" required min="0.01" step="0.01" aria-label="Precio de {p.code}"></td>
+                        {#else}
+                        <td>{p.name}</td>
+                        <td class="num">{p.unitPrice.money}</td>
+                        {/if}
+                        <td class="mid">{#if p.active}<span class="stamp stamp-paid">Activo</span>{#else}<span class="stamp stamp-muted">Inactivo</span>{/if}</td>
+                        {#if inject:me.admin}
+                        <td class="mid">
+                            <form id="edit-{p.id}" action="/productos/{p.id}/editar" method="post" class="d-inline">
+{#include partials/csrf /}
+                                <button type="submit" class="btn btn-primary rg-btn is-sm">Guardar</button>
+                            </form>
+                            <form action="/productos/{p.id}/estado" method="post" class="d-inline">
+{#include partials/csrf /}
+                                <button type="submit" class="btn btn-secondary rg-btn is-ghost is-sm">{#if p.active}Desactivar{#else}Activar{/if}</button>
+                            </form>
+                        </td>
+                        {/if}
+                    </tr>
+                    {#else}
+                    <tr><td colspan="5" class="rg-empty">No hay productos registrados.</td></tr>
+                    {/for}
+                    <tr class="rg-noresults" hidden><td colspan="5" class="rg-empty">Sin resultados para tu b&uacute;squeda.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="rg-barcode" aria-hidden="true"></div>
+</section></div>
+{/body}
+{/include}

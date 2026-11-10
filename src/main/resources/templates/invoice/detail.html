@@ -63,27 +63,27 @@
 
         <div class="col-lg-5 rg-actions">
             {#if editable}
-            <div class="rg-box">
+            {#if inject:me.cashier}
+<div class="rg-box">
                 <span class="rg-box-t">Agregar l&iacute;nea</span>
                 <form action="/facturas/{invoice.id}/items" method="post">
 {#include partials/csrf /}
                     <div class="rg-field">
-                        <label for="productName">Producto</label>
-                        <input type="text" id="productName" name="productName" class="rg-in" maxlength="150" required placeholder="Nombre del producto">
+                        <label for="productId">Producto</label>
+                        <select id="productId" name="productId" class="rg-in" required>
+                            <option value="">Seleccione un producto</option>
+                            {#for p in products}
+                            <option value="{p.id}">{p.name} &middot; {p.unitPrice.money}</option>
+                            {/for}
+                        </select>
                     </div>
-                    <div class="row g-3">
-                        <div class="col-7 rg-field">
-                            <label for="unitPrice">Precio unitario</label>
-                            <input type="number" id="unitPrice" name="unitPrice" class="rg-in" min="0.01" step="0.01" required placeholder="0,00">
-                        </div>
-                        <div class="col-5 rg-field">
-                            <label for="quantity">Cantidad</label>
-                            <input type="number" id="quantity" name="quantity" class="rg-in" min="1" max="100000" value="1" required>
-                        </div>
+                    <div class="rg-field">
+                        <label for="quantity">Cantidad</label>
+                        <input type="number" id="quantity" name="quantity" class="rg-in" min="1" max="100000" value="1" required>
                     </div>
-                    <button type="submit" class="btn btn-primary rg-btn is-block">Agregar a la factura</button>
-                </form>
+                    <button type="submit" class="btn btn-primary rg-btn is-block">Agregar a la factura</button>                </form>
             </div>
+{/if}
 
             <div class="rg-box">
                 <span class="rg-box-t">Cambiar estado</span>

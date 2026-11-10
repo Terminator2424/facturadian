@@ -7,11 +7,13 @@ import com.facturadian.domain.model.Client;
 import com.facturadian.domain.model.Invoice;
 import com.facturadian.domain.model.InvoiceItem;
 import com.facturadian.domain.model.InvoiceStatus;
+import com.facturadian.domain.model.Product;
 import com.facturadian.domain.model.SalesSummary;
 import com.facturadian.application.port.in.InvoiceUseCase;
 import com.facturadian.application.port.out.ClientRepositoryPort;
 import com.facturadian.application.port.out.InvoiceRepositoryPort;
 import com.facturadian.application.port.out.PdfGeneratorPort;
+import com.facturadian.application.port.out.ProductRepositoryPort;
 import com.facturadian.application.port.out.UserRepositoryPort;
 import java.time.LocalDate;
 import java.util.List;
@@ -24,19 +26,22 @@ public class InvoiceService implements InvoiceUseCase {
     private final ClientRepositoryPort clientRepository;
     private final UserRepositoryPort userRepository;
     private final PdfGeneratorPort pdfGenerator;
+    private final ProductRepositoryPort productRepository;
 
     public InvoiceService(InvoiceRepositoryPort invoiceRepository,
                           ClientRepositoryPort clientRepository,
                           UserRepositoryPort userRepository,
-                          PdfGeneratorPort pdfGenerator) {
+                          PdfGeneratorPort pdfGenerator,
+                          ProductRepositoryPort productRepository) {
         this.invoiceRepository = invoiceRepository;
         this.clientRepository = clientRepository;
         this.userRepository = userRepository;
         this.pdfGenerator = pdfGenerator;
+        this.productRepository = productRepository;
     }
 
     @Override
-    public Invoice createInvoice(Long clientId, List<InvoiceItem> items, String issuedByUsername) {
+    public Invoice createInvoice(Long clientId, List<ItemRequest> items, String issuedByUsername) {
         if (clientId == null) {
             throw new BusinessException("Debe seleccionar un cliente.");
         }
@@ -51,8 +56,8 @@ public class InvoiceService implements InvoiceUseCase {
         Invoice invoice = new Invoice(null, client);
         invoice.setIssuedBy(cashier);
         invoice.setIssueDate(LocalDate.now());
-        for (InvoiceItem item : items) {
-            invoice.addItem(item);
+        for (ItemRequest line : items) {
+            invoice.addItem(toItem(line));
         }
         return saveWithNextNumber(invoice);
     }
@@ -74,9 +79,9 @@ public class InvoiceService implements InvoiceUseCase {
     }
 
     @Override
-    public Invoice addItem(Long invoiceId, InvoiceItem item) {
+    public Invoice addItem(Long invoiceId, ItemRequest item) {
         Invoice invoice = getInvoice(invoiceId);
-        invoice.addItem(item);
+        invoice.addItem(toItem(item));
         return invoiceRepository.save(invoice);
     }
 
@@ -128,6 +133,18 @@ public class InvoiceService implements InvoiceUseCase {
     @Override
     public byte[] generateSummaryPdf(LocalDate from, LocalDate to) {
         return pdfGenerator.generateSummaryPdf(getSalesSummary(from, to));
+    }
+
+    private InvoiceItem toItem(ItemRequest line) {
+        if (line == null || line.productId() == null) {
+            throw new BusinessException("Debe seleccionar un producto.");
+        }
+        Product product = productRepository.findById(line.productId())
+                .orElseThrow(() -> new BusinessException("Producto no encontrado."));
+        if (!product.isActive()) {
+            throw new BusinessException("El producto \"" + product.getName() + "\" está inactivo.");
+        }
+        return new InvoiceItem(product.getName(), product.getUnitPrice(), line.quantity());
     }
 
     private String nextInvoiceNumber() {

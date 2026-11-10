@@ -21,6 +21,18 @@ public class CurrentUser {
         return name != null ? name : identity.getPrincipal().getName();
     }
 
+    public boolean isAdmin() {
+        return identity != null && identity.hasRole("admin");
+    }
+
+    public boolean isCashier() {
+        return identity != null && identity.hasRole("cashier");
+    }
+
+    public String getRoleLabel() {
+        return isAdmin() ? "ADMIN" : "CAJERO";
+    }
+
     public String getShortName() {
         String full = getFullName().trim();
         if (full.isEmpty()) {

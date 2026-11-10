@@ -1,6 +1,7 @@
 package com.facturadian.infrastructure.adapter.out.persistence.mapper;
 
 import com.facturadian.domain.model.AppUser;
+import com.facturadian.domain.model.Role;
 import com.facturadian.infrastructure.adapter.out.persistence.entity.UserEntity;
 
 public final class UserMapper {
@@ -17,6 +18,7 @@ public final class UserMapper {
         u.setFailedAttempts(e.getFailedAttempts());
         u.setLockedUntil(e.getLockedUntil());
         u.setCreatedAt(e.getCreatedAt());
+        u.setRole(e.getRole() == null ? Role.CASHIER : Role.valueOf(e.getRole()));
         return u;
     }
 
@@ -31,6 +33,7 @@ public final class UserMapper {
         e.setFailedAttempts(d.getFailedAttempts());
         e.setLockedUntil(d.getLockedUntil());
         e.setCreatedAt(d.getCreatedAt());
+        e.setRole(d.getRole().name());
         return e;
     }
 }

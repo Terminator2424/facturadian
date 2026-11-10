@@ -4,16 +4,18 @@ import static com.facturadian.infrastructure.adapter.in.rest.resource.ViewSuppor
 import static com.facturadian.infrastructure.adapter.in.rest.resource.ViewSupport.redirect;
 import static com.facturadian.infrastructure.adapter.in.rest.resource.ViewSupport.withMessages;
 
-import com.facturadian.domain.exception.BusinessException;
-import com.facturadian.domain.model.Invoice;
-import com.facturadian.domain.model.InvoiceItem;
-import com.facturadian.domain.model.InvoiceStatus;
 import com.facturadian.application.port.in.ClientUseCase;
 import com.facturadian.application.port.in.InvoiceUseCase;
+import com.facturadian.application.port.in.InvoiceUseCase.ItemRequest;
+import com.facturadian.application.port.in.ProductUseCase;
+import com.facturadian.domain.exception.BusinessException;
+import com.facturadian.domain.model.Invoice;
+import com.facturadian.domain.model.InvoiceStatus;
 import io.quarkus.qute.Location;
-import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
+import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.FormParam;
@@ -26,7 +28,6 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -42,6 +43,9 @@ public class InvoiceController {
 
     @Inject
     ClientUseCase clientUseCase;
+
+    @Inject
+    ProductUseCase productUseCase;
 
     @Inject
     SecurityIdentity identity;
@@ -74,35 +78,28 @@ public class InvoiceController {
 
     @GET
     @Path("/nueva")
+    @RolesAllowed("cashier")
     @Produces(MediaType.TEXT_HTML)
-    @Operation(summary = "Formulario de nueva factura", description = "Muestra el formulario con los clientes y 5 filas de ítems")
+    @Operation(summary = "Formulario de nueva factura", description = "Muestra el formulario: se elige el cliente y se escanean o buscan los productos")
     public TemplateInstance newInvoice(@QueryParam("success") String success,
                                        @QueryParam("error") String error) {
-        TemplateInstance template = formTemplate
-                .data("clients", clientUseCase.listClients())
-                .data("rows", List.of(1, 2, 3, 4, 5));
+        TemplateInstance template = formTemplate.data("clients", clientUseCase.listClients());
         return withMessages(template, success, error);
     }
 
     @POST
     @Path("/crear")
+    @RolesAllowed("cashier")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Operation(summary = "Crear factura", description = "Crea la factura con sus ítems, calcula IVA y ReteIVA y redirige al detalle")
+    @Operation(summary = "Crear factura", description = "Crea la factura con los productos del catálogo, calcula IVA y ReteIVA y redirige al detalle")
     public Response create(@FormParam("clientId") Long clientId,
-                           @FormParam("productName") List<String> names,
-                           @FormParam("unitPrice") List<String> prices,
+                           @FormParam("productId") List<Long> productIds,
                            @FormParam("quantity") List<String> quantities) {
         try {
-            List<InvoiceItem> items = new ArrayList<>();
-            for (int i = 0; i < names.size(); i++) {
-                String name = names.get(i);
-                String price = i < prices.size() ? prices.get(i) : null;
+            List<ItemRequest> items = new ArrayList<>();
+            for (int i = 0; i < productIds.size(); i++) {
                 String quantity = i < quantities.size() ? quantities.get(i) : null;
-                // Las filas vacías (sin producto ni precio) se ignoran
-                if (isBlank(name) && isBlank(price)) {
-                    continue;
-                }
-                items.add(buildItem(name, price, quantity, i + 1));
+                items.add(buildLine(productIds.get(i), quantity, i + 1));
             }
             Invoice invoice = invoiceUseCase.createInvoice(clientId, items, identity.getPrincipal().getName());
             return redirect("/facturas/" + invoice.getId(),
@@ -123,7 +120,8 @@ public class InvoiceController {
             Invoice invoice = invoiceUseCase.getInvoice(id);
             TemplateInstance template = detailTemplate
                     .data("invoice", invoice)
-                    .data("editable", invoice.getStatus() == InvoiceStatus.ISSUED);
+                    .data("editable", invoice.getStatus() == InvoiceStatus.ISSUED)
+                    .data("products", productUseCase.listActiveProducts());
             return withMessages(template, success, error);
         } catch (BusinessException e) {
             throw new WebApplicationException(redirect("/facturas", null, e.getMessage()));
@@ -132,14 +130,14 @@ public class InvoiceController {
 
     @POST
     @Path("/{id}/items")
+    @RolesAllowed("cashier")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Operation(summary = "Agregar ítem", description = "Agrega un ítem a una factura Emitida y recalcula los totales")
+    @Operation(summary = "Agregar ítem", description = "Agrega un producto del catálogo a una factura Emitida y recalcula los totales")
     public Response addItem(@PathParam("id") Long id,
-                            @FormParam("productName") String name,
-                            @FormParam("unitPrice") String price,
+                            @FormParam("productId") Long productId,
                             @FormParam("quantity") String quantity) {
         try {
-            invoiceUseCase.addItem(id, buildItem(name, price, quantity, 0));
+            invoiceUseCase.addItem(id, buildLine(productId, quantity, 0));
             return redirect("/facturas/" + id, "Ítem agregado correctamente.", null);
         } catch (BusinessException e) {
             return redirect("/facturas/" + id, null, e.getMessage());
@@ -196,20 +194,15 @@ public class InvoiceController {
         }
     }
 
-    private InvoiceItem buildItem(String name, String price, String quantity, int row) {
-        String where = row > 0 ? " (fila " + row + ")" : "";
-        BigDecimal unitPrice;
+    /** Solo se lee el producto y la cantidad: el nombre y el precio los pone el catálogo. */
+    private ItemRequest buildLine(Long productId, String quantity, int row) {
+        String where = row > 0 ? " (línea " + row + ")" : "";
         int qty;
-        try {
-            unitPrice = new BigDecimal(price == null ? "" : price.trim());
-        } catch (NumberFormatException e) {
-            throw new BusinessException("El precio no es un número válido" + where + ".");
-        }
         try {
             qty = Integer.parseInt(quantity == null ? "" : quantity.trim());
         } catch (NumberFormatException e) {
             throw new BusinessException("La cantidad no es un número entero válido" + where + ".");
         }
-        return new InvoiceItem(name == null ? null : name.trim(), unitPrice, qty);
+        return new ItemRequest(productId, qty);
     }
 }

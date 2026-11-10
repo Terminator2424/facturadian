@@ -1,7 +1,7 @@
-package com.facturadian.infrastructure.adapter.in.web;
+package com.facturadian.infrastructure.adapter.in.rest.resource;
 
-import static com.facturadian.infrastructure.adapter.in.web.ViewSupport.redirect;
-import static com.facturadian.infrastructure.adapter.in.web.ViewSupport.withMessages;
+import static com.facturadian.infrastructure.adapter.in.rest.resource.ViewSupport.redirect;
+import static com.facturadian.infrastructure.adapter.in.rest.resource.ViewSupport.withMessages;
 
 import com.facturadian.domain.exception.BusinessException;
 import com.facturadian.domain.model.Client;

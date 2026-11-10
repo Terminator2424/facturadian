@@ -1,4 +1,4 @@
-package com.facturadian.infrastructure.adapter.in.web;
+package com.facturadian.infrastructure.adapter.in.rest.resource;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

@@ -1,4 +1,4 @@
-package com.facturadian.infrastructure.adapter.in.web;
+package com.facturadian.infrastructure.adapter.in.rest.resource;
 
 import com.facturadian.domain.exception.BusinessException;
 import com.facturadian.application.port.in.UserUseCase;

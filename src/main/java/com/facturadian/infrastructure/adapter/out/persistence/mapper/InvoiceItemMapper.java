@@ -13,6 +13,7 @@ public final class InvoiceItemMapper {
         d.setProductName(e.getProductName());
         d.setUnitPrice(e.getUnitPrice());
         d.setQuantity(e.getQuantity());
+        d.setProductId(e.getProduct() == null ? null : e.getProduct().getId());
         return d;
     }
 

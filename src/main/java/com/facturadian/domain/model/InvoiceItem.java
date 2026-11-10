@@ -11,6 +11,7 @@ public class InvoiceItem {
     private String productName;
     private BigDecimal unitPrice;
     private int quantity;
+    private Long productId; // producto del catálogo (nulo en facturas antiguas)
 
     public InvoiceItem() {}
 
@@ -58,4 +59,6 @@ public class InvoiceItem {
     public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
+    public Long getProductId() { return productId; }
+    public void setProductId(Long productId) { this.productId = productId; }
 }

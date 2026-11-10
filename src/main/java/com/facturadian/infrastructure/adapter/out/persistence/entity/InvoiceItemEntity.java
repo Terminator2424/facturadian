@@ -23,6 +23,10 @@ public class InvoiceItemEntity {
     @JoinColumn(name = "invoice_id", nullable = false)
     private InvoiceEntity invoice;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private ProductEntity product;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getProductName() { return productName; }
@@ -33,4 +37,6 @@ public class InvoiceItemEntity {
     public void setQuantity(int quantity) { this.quantity = quantity; }
     public InvoiceEntity getInvoice() { return invoice; }
     public void setInvoice(InvoiceEntity invoice) { this.invoice = invoice; }
+    public ProductEntity getProduct() { return product; }
+    public void setProduct(ProductEntity product) { this.product = product; }
 }

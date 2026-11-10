@@ -136,7 +136,7 @@ Bootstrap 5 aporta la grilla, los botones y las alertas; el estilo propio está 
 
 ## Evidencia en phpMyAdmin
 
-Abre http://localhost/phpmyadmin y entra a la base `facturadian`. Relaciones: `clients` 1-N `invoices` (`client_id`), `app_users` 1-N `invoices` (`issued_by_id`) e `invoices` 1-N `invoice_items` (`invoice_id`). Se ven en la pestaña Diseñador. La tabla `products` no tiene llave foránea con los ítems a propósito: cada ítem guarda el nombre y el precio del momento de la venta.
+Abre http://localhost/phpmyadmin y entra a la base `facturadian`. Relaciones: `clients` 1-N `invoices` (`client_id`), `app_users` 1-N `invoices` (`issued_by_id`) e `invoices` 1-N `invoice_items` (`invoice_id`). Se ven en la pestaña Diseñador. Además, `products` 1-N `invoice_items` (`product_id`, opcional): cada ítem guarda la referencia al producto y también el nombre y el precio del momento de la venta.
 
 ## Cumplimiento de los lineamientos
 

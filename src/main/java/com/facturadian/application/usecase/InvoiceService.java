@@ -144,7 +144,9 @@ public class InvoiceService implements InvoiceUseCase {
         if (!product.isActive()) {
             throw new BusinessException("El producto \"" + product.getName() + "\" está inactivo.");
         }
-        return new InvoiceItem(product.getName(), product.getUnitPrice(), line.quantity());
+        InvoiceItem item = new InvoiceItem(product.getName(), product.getUnitPrice(), line.quantity());
+        item.setProductId(product.getId());
+        return item;
     }
 
     private String nextInvoiceNumber() {

@@ -5,6 +5,7 @@ import com.facturadian.domain.model.Invoice;
 import com.facturadian.application.port.out.InvoiceRepositoryPort;
 import com.facturadian.infrastructure.adapter.out.persistence.entity.ClientEntity;
 import com.facturadian.infrastructure.adapter.out.persistence.entity.InvoiceEntity;
+import com.facturadian.infrastructure.adapter.out.persistence.entity.ProductEntity;
 import com.facturadian.infrastructure.adapter.out.persistence.entity.UserEntity;
 import com.facturadian.infrastructure.adapter.out.persistence.mapper.InvoiceMapper;
 import com.facturadian.infrastructure.adapter.out.persistence.repository.ClientPanacheRepository;
@@ -46,6 +47,12 @@ public class InvoiceRepositoryAdapter implements InvoiceRepositoryPort {
         ClientEntity client = clientRepository.findById(invoice.getClient().getId());
         UserEntity issuedBy = invoice.getIssuedBy() == null ? null : userRepository.findById(invoice.getIssuedBy().getId());
         InvoiceEntity entity = InvoiceMapper.toEntity(invoice, client, issuedBy);
+        for (int i = 0; i < invoice.getItems().size(); i++) {
+            Long productId = invoice.getItems().get(i).getProductId();
+            if (productId != null) {
+                entity.getItems().get(i).setProduct(em.getReference(ProductEntity.class, productId));
+            }
+        }
         try {
             // merge sirve tanto para facturas nuevas (id null) como para actualizar existentes
             InvoiceEntity saved = em.merge(entity);

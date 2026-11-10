@@ -1,6 +1,6 @@
 package com.facturadian.infrastructure.adapter.out.security;
 
-import com.facturadian.domain.port.output.PasswordHasherPort;
+import com.facturadian.application.port.out.PasswordHasherPort;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 

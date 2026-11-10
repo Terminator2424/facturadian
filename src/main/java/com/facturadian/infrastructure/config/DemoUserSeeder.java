@@ -1,7 +1,7 @@
 package com.facturadian.infrastructure.config;
 
 import com.facturadian.domain.exception.BusinessException;
-import com.facturadian.domain.port.input.UserUseCase;
+import com.facturadian.application.port.in.UserUseCase;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;

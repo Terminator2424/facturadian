@@ -2,7 +2,7 @@ package com.facturadian.infrastructure.adapter.out.persistence;
 
 import com.facturadian.domain.exception.DuplicateInvoiceNumberException;
 import com.facturadian.domain.model.Invoice;
-import com.facturadian.domain.port.output.InvoiceRepositoryPort;
+import com.facturadian.application.port.out.InvoiceRepositoryPort;
 import com.facturadian.infrastructure.adapter.out.persistence.entity.ClientEntity;
 import com.facturadian.infrastructure.adapter.out.persistence.entity.InvoiceEntity;
 import com.facturadian.infrastructure.adapter.out.persistence.entity.UserEntity;

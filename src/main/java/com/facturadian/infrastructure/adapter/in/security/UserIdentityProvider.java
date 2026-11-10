@@ -1,7 +1,7 @@
 package com.facturadian.infrastructure.adapter.in.security;
 
 import com.facturadian.domain.model.AppUser;
-import com.facturadian.domain.port.input.UserUseCase;
+import com.facturadian.application.port.in.UserUseCase;
 import io.quarkus.security.AuthenticationFailedException;
 import io.quarkus.security.identity.AuthenticationRequestContext;
 import io.quarkus.security.identity.IdentityProvider;

@@ -1,7 +1,7 @@
 package com.facturadian.infrastructure.adapter.in.web;
 
 import com.facturadian.domain.exception.BusinessException;
-import com.facturadian.domain.port.input.UserUseCase;
+import com.facturadian.application.port.in.UserUseCase;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;

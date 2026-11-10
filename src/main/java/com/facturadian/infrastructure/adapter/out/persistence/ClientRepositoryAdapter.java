@@ -1,7 +1,7 @@
 package com.facturadian.infrastructure.adapter.out.persistence;
 
 import com.facturadian.domain.model.Client;
-import com.facturadian.domain.port.output.ClientRepositoryPort;
+import com.facturadian.application.port.out.ClientRepositoryPort;
 import com.facturadian.infrastructure.adapter.out.persistence.entity.ClientEntity;
 import com.facturadian.infrastructure.adapter.out.persistence.mapper.ClientMapper;
 import com.facturadian.infrastructure.adapter.out.persistence.repository.ClientPanacheRepository;

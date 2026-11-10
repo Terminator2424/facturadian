@@ -4,7 +4,7 @@ import com.facturadian.domain.exception.BusinessException;
 import com.facturadian.domain.model.Invoice;
 import com.facturadian.domain.model.InvoiceItem;
 import com.facturadian.domain.model.SalesSummary;
-import com.facturadian.domain.port.output.PdfGeneratorPort;
+import com.facturadian.application.port.out.PdfGeneratorPort;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;

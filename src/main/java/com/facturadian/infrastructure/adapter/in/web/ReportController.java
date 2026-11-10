@@ -6,7 +6,7 @@ import static com.facturadian.infrastructure.adapter.in.web.ViewSupport.withMess
 
 import com.facturadian.domain.exception.BusinessException;
 import com.facturadian.domain.model.SalesSummary;
-import com.facturadian.domain.port.input.InvoiceUseCase;
+import com.facturadian.application.port.in.InvoiceUseCase;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;

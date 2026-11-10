@@ -1,4 +1,4 @@
-package com.facturadian.domain.port.output;
+package com.facturadian.application.port.out;
 
 import com.facturadian.domain.model.AppUser;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.facturadian.domain.port.input;
+package com.facturadian.application.port.in;
 
 import com.facturadian.domain.model.Client;
 import java.util.List;

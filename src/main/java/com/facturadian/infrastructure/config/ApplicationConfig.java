@@ -1,16 +1,16 @@
 package com.facturadian.infrastructure.config;
 
-import com.facturadian.domain.port.input.ClientUseCase;
-import com.facturadian.domain.port.input.InvoiceUseCase;
-import com.facturadian.domain.port.input.UserUseCase;
-import com.facturadian.domain.port.output.ClientRepositoryPort;
-import com.facturadian.domain.port.output.InvoiceRepositoryPort;
-import com.facturadian.domain.port.output.PasswordHasherPort;
-import com.facturadian.domain.port.output.PdfGeneratorPort;
-import com.facturadian.domain.port.output.UserRepositoryPort;
-import com.facturadian.domain.service.ClientService;
-import com.facturadian.domain.service.InvoiceService;
-import com.facturadian.domain.service.UserService;
+import com.facturadian.application.port.in.ClientUseCase;
+import com.facturadian.application.port.in.InvoiceUseCase;
+import com.facturadian.application.port.in.UserUseCase;
+import com.facturadian.application.port.out.ClientRepositoryPort;
+import com.facturadian.application.port.out.InvoiceRepositoryPort;
+import com.facturadian.application.port.out.PasswordHasherPort;
+import com.facturadian.application.port.out.PdfGeneratorPort;
+import com.facturadian.application.port.out.UserRepositoryPort;
+import com.facturadian.application.usecase.ClientService;
+import com.facturadian.application.usecase.InvoiceService;
+import com.facturadian.application.usecase.UserService;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;

@@ -1,9 +1,9 @@
-package com.facturadian.domain.service;
+package com.facturadian.application.usecase;
 
 import com.facturadian.domain.exception.BusinessException;
 import com.facturadian.domain.model.Client;
-import com.facturadian.domain.port.input.ClientUseCase;
-import com.facturadian.domain.port.output.ClientRepositoryPort;
+import com.facturadian.application.port.in.ClientUseCase;
+import com.facturadian.application.port.out.ClientRepositoryPort;
 import java.util.List;
 import java.util.regex.Pattern;
 

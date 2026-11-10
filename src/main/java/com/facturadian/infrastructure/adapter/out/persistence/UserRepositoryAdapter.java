@@ -1,7 +1,7 @@
 package com.facturadian.infrastructure.adapter.out.persistence;
 
 import com.facturadian.domain.model.AppUser;
-import com.facturadian.domain.port.output.UserRepositoryPort;
+import com.facturadian.application.port.out.UserRepositoryPort;
 import com.facturadian.infrastructure.adapter.out.persistence.entity.UserEntity;
 import com.facturadian.infrastructure.adapter.out.persistence.mapper.UserMapper;
 import com.facturadian.infrastructure.adapter.out.persistence.repository.UserPanacheRepository;

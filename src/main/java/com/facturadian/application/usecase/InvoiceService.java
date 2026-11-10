@@ -1,4 +1,4 @@
-package com.facturadian.domain.service;
+package com.facturadian.application.usecase;
 
 import com.facturadian.domain.exception.BusinessException;
 import com.facturadian.domain.exception.DuplicateInvoiceNumberException;
@@ -8,11 +8,11 @@ import com.facturadian.domain.model.Invoice;
 import com.facturadian.domain.model.InvoiceItem;
 import com.facturadian.domain.model.InvoiceStatus;
 import com.facturadian.domain.model.SalesSummary;
-import com.facturadian.domain.port.input.InvoiceUseCase;
-import com.facturadian.domain.port.output.ClientRepositoryPort;
-import com.facturadian.domain.port.output.InvoiceRepositoryPort;
-import com.facturadian.domain.port.output.PdfGeneratorPort;
-import com.facturadian.domain.port.output.UserRepositoryPort;
+import com.facturadian.application.port.in.InvoiceUseCase;
+import com.facturadian.application.port.out.ClientRepositoryPort;
+import com.facturadian.application.port.out.InvoiceRepositoryPort;
+import com.facturadian.application.port.out.PdfGeneratorPort;
+import com.facturadian.application.port.out.UserRepositoryPort;
 import java.time.LocalDate;
 import java.util.List;
 

@@ -1,10 +1,10 @@
-package com.facturadian.domain.service;
+package com.facturadian.application.usecase;
 
 import com.facturadian.domain.exception.BusinessException;
 import com.facturadian.domain.model.AppUser;
-import com.facturadian.domain.port.input.UserUseCase;
-import com.facturadian.domain.port.output.PasswordHasherPort;
-import com.facturadian.domain.port.output.UserRepositoryPort;
+import com.facturadian.application.port.in.UserUseCase;
+import com.facturadian.application.port.out.PasswordHasherPort;
+import com.facturadian.application.port.out.UserRepositoryPort;
 import java.util.Optional;
 import java.util.regex.Pattern;
 

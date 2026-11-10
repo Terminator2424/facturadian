@@ -106,6 +106,21 @@ public class UserService implements UserUseCase {
         return repository.findByUsername(username.trim().toLowerCase()).filter(u -> !u.isLocked());
     }
 
+    @Override
+    public boolean syncAdminPassword(String username, String password) {
+        AppUser admin = repository.findByUsername(username == null ? "" : username.trim().toLowerCase())
+                .filter(u -> u.getRole() == Role.ADMIN)
+                .orElseThrow(() -> new BusinessException("No existe el administrador."));
+        if (hasher.matches(password, admin.getPasswordHash())) {
+            return false;
+        }
+        validatePassword(password, password, admin.getUsername());
+        admin.setPasswordHash(hasher.hash(password));
+        admin.registerSuccessfulLogin();
+        repository.save(admin);
+        return true;
+    }
+
     private void validatePassword(String password, String confirm, String username) {
         if (password == null || password.isEmpty()) {
             throw new BusinessException("La contraseña es obligatoria.");

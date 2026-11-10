@@ -33,6 +33,13 @@ public class AdminSeeder {
             Log.info("Administrador creado: " + username);
         } catch (BusinessException e) {
             Log.info("Administrador no creado: " + e.getMessage());
+            try {
+                if (users.syncAdminPassword(username, password.get())) {
+                    Log.info("Clave del administrador actualizada desde ADMIN_PASSWORD.");
+                }
+            } catch (BusinessException ex) {
+                Log.warn("No se pudo actualizar la clave del administrador: " + ex.getMessage());
+            }
         }
     }
 }
